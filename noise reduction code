@@ -39,21 +39,26 @@ for u = 1:M
     for v = 1:N 
         D1 = sqrt((u - v0)^2 + (v - u0)^2);               % Target spike 
         D2 = sqrt((u - v0)^2 + (v - (N - u0 + 1))^2);      % Symmetric spike 
-        H(u,v) = H(u,v) * (1 - exp(-(D1^2)/(2*D0^2))) * ... 
-                          (1 - exp(-(D2^2)/(2*D0^2)));
+        H(u,v) = H(u,v) * (1 - exp(-(D1^2)/(2*D0^2))) * (1 - exp(-(D2^2)/(2*D0^2))); 
     end 
 end 
+
 % Add visible lines at notch locations for visualization 
 H_with_lines = H; 
-H_with_lines(v0-1:v0+1, :) = 0;                  
+H_with_lines(v0-1:v0+1, :) = 0;  
+
 % Horizontal center line 
-H_with_lines(:, u0-1:u0+1) = 0;                  
+H_with_lines(:, u0-1:u0+1) = 0;   
+
 % Vertical at +f_noise 
 H_with_lines(:, (N - u0 + 1)-1:(N - u0 + 1)+1) = 0;  % Vertical at -f_noise 
+
 % Step 5: Apply filter in frequency domain 
 F_filtered = F .* H; 
+
 % Step 6: Inverse FFT to reconstruct image 
 I_filtered = real(ifft2(ifftshift(F_filtered))); 
+
 % Step 7: Display all results 
 figure; 
 subplot(2,3,1); imshow(I,[]); title('Original Grayscale Image'); 
